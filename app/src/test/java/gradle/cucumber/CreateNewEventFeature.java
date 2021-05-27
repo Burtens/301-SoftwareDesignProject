@@ -29,6 +29,7 @@ package gradle.cucumber;
 
 import java.util.Date;
 
+import io.cucumber.java.bs.A;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.Assertions;
@@ -59,6 +60,9 @@ public class CreateNewEventFeature {
 
   private String firstEventName;
   private String eventDescription;
+
+  private String firstInvalidDate;
+  private String secondInvalidDate;
 
   @Before
   public void setup() {
@@ -149,4 +153,58 @@ public class CreateNewEventFeature {
     Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEvent(secondEvent));
   }
 
+
+  //
+  // U1 - AC4
+  //
+
+  @Given("There is no events with name {string} and {string}")
+  public void there_is_no_events_with_name_and(String firstEventName, String secondEventName) {
+
+    // Check if events with the given names exist
+    Assertions.assertFalse(eventAccessor.eventExistsWithName(firstEventName));
+    Assertions.assertFalse(eventAccessor.eventExistsWithName(secondEventName));
+
+  }
+
+  @When("I want to set the first event date to {string} and the second to {string}")
+  public void i_want_to_set_the_first_event_date_to_and_the_second_to(String dateStringEvent1, String dateStringEvent2) {
+
+    firstInvalidDate = dateStringEvent1;
+    secondInvalidDate = dateStringEvent2;
+
+    //Check that the two dates are valid dates and no matter what the circumstances can be converted into date objects
+    Date convertedDate1 = DateUtil.getInstance().convertToDate(dateStringEvent1);
+    Date convertedDate2 = DateUtil.getInstance().convertToDate(dateStringEvent2);
+
+    // Dates should be created
+    Assertions.assertNotNull(convertedDate1);
+    Assertions.assertNotNull(convertedDate2);
+
+  }
+
+  @Then("I expect an exception that disallow me to create any of those")
+  public void i_expect_an_exception_that_disallow_me_to_create_any_of_those() {
+
+    // Attempt to make first Event
+    IllegalArgumentException thrownFromFirstDate = Assertions.assertThrows(IllegalArgumentException.class, () ->
+            eventHandler.createEvent("Test Event 1", "This is a drill", firstInvalidDate,
+            "some type"));
+
+    // Test that the correct message is also being sent
+    Assertions.assertEquals("date '" + firstInvalidDate + "' does not follow expected format "
+            + DateUtil.getInstance().getDefaultDateFormat() + ", is in the past or later than one year",
+            thrownFromFirstDate.getMessage());
+
+    // Attempt to make second event
+    IllegalArgumentException thrownFromSecondDate = Assertions.assertThrows(IllegalArgumentException.class, () ->
+            eventHandler.createEvent("Test Event 2", "This is also a drill", secondInvalidDate,
+            "some type"));
+
+    // Test that the correct message is also being sent
+    Assertions.assertEquals("date '" + secondInvalidDate + "' does not follow expected format "
+                    + DateUtil.getInstance().getDefaultDateFormat() + ", is in the past or later than one year",
+            thrownFromSecondDate.getMessage());
+
+  }
 }

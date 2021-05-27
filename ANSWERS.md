@@ -1,6 +1,6 @@
 # SENG301 Assignment 1 (2021) - Student answers
 
-**YOUR NAME**
+**Samuel Burtenshaw - sgb79**
 
 ## Task 1.b - Write acceptance tests for U3 - Add participants to events
 
