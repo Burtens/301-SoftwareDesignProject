@@ -56,7 +56,7 @@ public class NominatimQuery implements LocationService {
   // get your key on
   // https://developer.mapquest.com/plan_purchase/steps/business_edition/business_edition_free/register
   // see https://developer.mapquest.com/documentation/open/nominatim-search/
-  private static final String MAPQUEST_KEY = "UPDATEME";
+  private static final String MAPQUEST_KEY = "amDMuYLHQpzRczlmOTOVM5NA7JAnV4LY";
 
   /**
    * Retrieve the first plausible city from a query string using the mapquest

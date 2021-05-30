@@ -170,8 +170,6 @@ public class CreateNewEventFeature {
   @When("I want to set the first event date to {string} and the second to {string}")
   public void i_want_to_set_the_first_event_date_to_and_the_second_to(String dateStringEvent1, String dateStringEvent2) {
 
-    firstInvalidDate = dateStringEvent1;
-    secondInvalidDate = dateStringEvent2;
 
     //Check that the two dates are valid dates and no matter what the circumstances can be converted into date objects
     Date convertedDate1 = DateUtil.getInstance().convertToDate(dateStringEvent1);
@@ -180,6 +178,10 @@ public class CreateNewEventFeature {
     // Dates should be created
     Assertions.assertNotNull(convertedDate1);
     Assertions.assertNotNull(convertedDate2);
+
+    // Store dates to be used in later tests
+    firstInvalidDate = dateStringEvent1;
+    secondInvalidDate = dateStringEvent2;
 
   }
 
