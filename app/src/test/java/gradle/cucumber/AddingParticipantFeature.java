@@ -1,6 +1,7 @@
 package gradle.cucumber;
 
 import io.cucumber.java.Before;
+import io.cucumber.java.bs.A;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -14,6 +15,8 @@ import uc.seng301.eventapp.handler.EventHandlerImpl;
 import uc.seng301.eventapp.model.Event;
 import uc.seng301.eventapp.model.Participant;
 
+import java.util.List;
+
 public class AddingParticipantFeature {
 
 
@@ -23,6 +26,9 @@ public class AddingParticipantFeature {
     EventHandler eventHandler;
 
     Event testEvent;
+    Long testEventId;
+    Long testParticipantId;
+    Participant testParticipant;
 
     @Before
     public void setup() {
@@ -38,37 +44,49 @@ public class AddingParticipantFeature {
     // U3 - AC1
     //
 
-    @Given("There is a participant with the name {string} and an existing event with name {string} and date {string}")
-    public void there_is_a_participant_with_name_and_an_existing_event_with_name_and_date(String participantName,
+    @Given("There is an existing participant with the name {string} and an existing event with name {string} and date {string}")
+    public void there_is_an_existing_participant_with_name_and_an_existing_event_with_name_and_date(String participantName,
                                                                            String eventName, String eventDate) {
         // Create new participant and store it in persistent storage
         Participant participant = new Participant(participantName);
         participantAccessor.persistParticipant(participant);
         Participant storedParticipant = participantAccessor.getParticipantByName(participantName);
 
+        testParticipantId = storedParticipant.getParticipantId();
+
         // Check that the participant is created correctly
         Assertions.assertNotNull(storedParticipant);
         Assertions.assertEquals(participantName , storedParticipant.getName());
 
-        //Create a new event and store it in persistent storage
+        //Create a new event
         testEvent = eventHandler.createEvent(eventName, "Some Description", eventDate, "Workshop");
-        eventAccessor.persistEvent(testEvent);
-
-
-
-
     }
 
     @When("I add that participant to the event")
     public void i_add_that_participant_to_the_event() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        testParticipant = participantAccessor.getParticipantById(testParticipantId);
+        testEvent.addParticipant(testParticipant);
+        testEventId = eventAccessor.persistEvent(testEvent);
+
     }
 
     @Then("I expect that event to contain the participant in its attending participants")
     public void i_expect_that_event_to_contain_the_participant_in_its_attending_participants() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Event storedEvent = eventAccessor.getEventAndParticipantsById(testEventId);
+
+        List<Participant> participantList = storedEvent.getParticipants();
+
+        // Check that the list is correctly return
+        Assertions.assertNotNull(participantList);
+
+        // Check that the participant is added to the event
+        Assertions.assertEquals(1, participantList.size());
+
+        Participant returnedParticipant = participantList.get(0);
+        Assertions.assertEquals(testParticipant.getName(), returnedParticipant.getName());
+
+        // Also test to see if the participants events contain the given event
+        Assertions.assertTrue(returnedParticipant.getEvents().stream().anyMatch(event -> event.getEventId().equals(testEventId)));
     }
 
 
@@ -76,8 +94,31 @@ public class AddingParticipantFeature {
     // U3 - AC2
     //
 
-    @Given("There is an existing event")
-    public void there_is_an_existing_event() {
+    @Given("There is an existing event with name {string} and date {string}")
+    public void there_is_an_existing_event_with_name_and_date(String eventName, String eventDate) {
+        //Create a new event
+        String eventDescription = "Some Description";
+        String eventType = "Some Type";
+
+        Event event = eventHandler.createEvent(eventName, eventDescription, eventDate, eventType);
+
+        testEventId = eventAccessor.persistEvent(event);
+
+    }
+
+    @When("I add a non-existent participant with name {string} to that event")
+    public void i_add_a_non_existent_participant_with_name_to_that_event(String participantName) {
+        Event event = eventAccessor.getEventById(testEventId);
+
+        testParticipant = new Participant(participantName);
+        System.out.println(event.getEventId());
+
+        event.addParticipant(testParticipant);
+        eventAccessor.persistEventAndParticipants(event);
+    }
+
+    @Then("A new participant should be generated with the given name and added to that event")
+    public void a_new_participant_should_be_generated_with_the_given_name_and_added_to_that_event() {
         // Write code here that turns the phrase above into concrete actions
         throw new io.cucumber.java.PendingException();
     }
