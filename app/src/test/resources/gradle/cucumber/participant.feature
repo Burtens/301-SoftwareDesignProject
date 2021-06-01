@@ -39,8 +39,8 @@ Feature: U3 - Add participant to event
 
   Scenario: AC3 - Empty Participants or participants with names containing invalid characters cannot be added to events
     Given There is an existing event with name "SENG301 Assignment Help" and date "08/06/2021"
-    When I attempt to add an empty participant or participants with names "12345", " ", ""
-    Then I should get an exception that disallows me to add any of those.
+    When I attempt to add an empty participant or participants with names "12345", " " and ""
+    Then I should get an exception when I try to add any of those to the event.
 
 
 
