@@ -37,6 +37,8 @@ public class AddingParticipantFeature {
     Participant invalidParticipant3;
     Participant invalidParticipant4;
     Participant invalidParticipant5;
+    Participant invalidParticipant6;
+    Participant invalidParticipant7;
 
     @Before
     public void setup() {
@@ -156,41 +158,58 @@ public class AddingParticipantFeature {
     // U3 - AC3
     //
 
-    @When("I attempt to add an empty participant or participants with names {string}, {string} and {string}")
-    public void i_attempt_to_add_an_empty_participant_or_participants_with_names(String name1, String name2, String name3) {
-        invalidParticipant1 = null;
-        invalidParticipant2 = new Participant(null);
-        invalidParticipant3 = new Participant(name1);
-        invalidParticipant4 = new Participant(name2);
-        invalidParticipant5 = new Participant(name3);
+    @When("I attempt to add an empty participant or participants with names {string}, {string}, {string}, {string} and {string}")
+    public void i_attempt_to_add_an_empty_participant_or_participants_with_names(String name1,
+                                                                                 String name2,
+                                                                                 String name3,
+                                                                                 String name4,
+                                                                                 String name5) {
+        invalidParticipant1 = new Participant(null);
+        invalidParticipant2 = new Participant(name1);
+        invalidParticipant3 = new Participant(name2);
+        invalidParticipant4 = new Participant(name3);
+        invalidParticipant5 = new Participant(name4);
+        invalidParticipant6 = new Participant(name5);
     }
 
-    @Then("I should get an exception when I try to add any of those to the event.")
-    public void i_should_get_an_exception_when_i_try_to_add_any_of_those_to_the_event() {
 
+    @Then("I should get an exception when I try the empty participant,")
+    public void i_should_get_an_exception_when_i_try_the_empty_participant() {
         // Test adding a null participant
-        testEvent.addParticipant(invalidParticipant1);
+        testEvent.addParticipant(null);
         Assertions.assertThrows(NullPointerException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
+    }
 
+    @Then("the participant with a null name,")
+    public void when_i_add_a_participant_with_a_null_name() {
         // Test adding a participant with null as its name
+        testEvent.setParticipants(Collections.emptyList());
+        testEvent.addParticipant(invalidParticipant1);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
+    }
+
+    @Then("the participants with invalid characters in their names.")
+    public void the_participants_with_invalid_characters_in_their_names() {
+
+        // Tests Participants with invalid names
         testEvent.setParticipants(Collections.emptyList());
         testEvent.addParticipant(invalidParticipant2);
         Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
 
-
-        // Tests Participants with invalid names
-//        testEvent.setParticipants(Collections.emptyList());
-//        testEvent.addParticipant(invalidParticipant3);
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
+        testEvent.setParticipants(Collections.emptyList());
+        testEvent.addParticipant(invalidParticipant3);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
 
         testEvent.setParticipants(Collections.emptyList());
         testEvent.addParticipant(invalidParticipant4);
         Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
 
-//        testEvent.setParticipants(Collections.emptyList());
-//        testEvent.addParticipant(invalidParticipant5);
-//        Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
+        testEvent.setParticipants(Collections.emptyList());
+        testEvent.addParticipant(invalidParticipant5);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
+
+        testEvent.setParticipants(Collections.emptyList());
+        testEvent.addParticipant(invalidParticipant6);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> eventAccessor.persistEventAndParticipants(testEvent));
     }
-
-
 }

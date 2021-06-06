@@ -47,7 +47,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "participant")
-public class Participant {
+public class Participant implements EventObserver {
 
   @Id
   @Column(name = "id_participant")
@@ -128,6 +128,15 @@ public class Participant {
    */
   public void setEvents(List<Event> events) {
     this.events = events;
+  }
+
+
+
+  @Override
+  public void Update(Long eventId) {
+
+    // TODO do something when event is notified
+
   }
 
   @Override

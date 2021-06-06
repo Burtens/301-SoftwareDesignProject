@@ -77,11 +77,13 @@ public class PastEvent extends Event {
   @Override
   public Event reschedule(Date date) {
     setDate(date);
+    notifyParticipants();
     return new ScheduledEvent(this);
   }
 
   @Override
   public Event archive() {
+    notifyParticipants();
     return new ArchivedEvent(this);
   }
 

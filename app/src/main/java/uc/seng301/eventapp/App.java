@@ -264,12 +264,30 @@ public class App {
     }
     participants.removeIf(participant -> participant.getName().isBlank());
     if (!participants.isEmpty()) {
-      eventHandler.addParticipants(event, participants);
+      try {
+        eventHandler.addParticipants(event, participants);
+      } catch (IllegalArgumentException e) {
+        System.out.println("Something wrong happened when saving participants to event: " + e.getMessage());
+      }
     }
   }
 
   private void updateEventStatusMenu() {
-    System.out.println("TODO -- Implement me as part of U4 (task 4)");
+    System.out.println("What is the id of the event you want to change status of?");
+    String eventId = cli.nextLine();
+
+    if (eventId.chars().allMatch(Character::isDigit)) {
+      Event event = eventAccessor.getEventAndParticipantsById(Long.parseLong(eventId));
+
+      if (null != event) {
+        String currentStatus = event.toString();
+        System.out.println("The current status of the event is: " + currentStatus);
+      } else {
+        System.out.println("Cannot find event with id: " + eventId);
+      }
+    } else {
+      System.out.println("Invalid value passed, needs to be an integer value.");
+    }
   }
 
   private void updateCalendar() {

@@ -160,8 +160,9 @@ public class EventAccessor {
       // since the Event's polymorphic @Discriminator is a database column only (not a
       // JPA property)
       results = session.createNativeQuery(
-          "select * from Event" + (null != status ? "WHERE event_status = '" + status.name() + "'" : ""), Event.class)
-          .list();
+              "select * from Event" + (null != status ? " WHERE event_status = '" + status.name() + "'" : ""), Event.class)
+              .list();
+
 
     } catch (HibernateException e) {
       LOGGER.error("unable to retrieve all events with status: {}", null != status ? status.name() : "no status", e);

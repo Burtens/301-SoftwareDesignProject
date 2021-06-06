@@ -79,11 +79,13 @@ public class CanceledEvent extends Event {
       throw new IllegalArgumentException("Date + '" + date + "' cannot be in the past.");
     }
     setDate(date);
+    notifyParticipants();
     return new ScheduledEvent(this);
   }
 
   @Override
   public Event archive() {
+    notifyParticipants();
     return new ArchivedEvent(this);
   }
 

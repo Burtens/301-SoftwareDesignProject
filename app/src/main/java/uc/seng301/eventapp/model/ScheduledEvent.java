@@ -86,11 +86,13 @@ public class ScheduledEvent extends Event {
 
   @Override
   public Event cancel() {
+    notifyParticipants();
     return new CanceledEvent(this);
   }
 
   @Override
   public Event happen() {
+    notifyParticipants();
     return new PastEvent(this);
   }
 

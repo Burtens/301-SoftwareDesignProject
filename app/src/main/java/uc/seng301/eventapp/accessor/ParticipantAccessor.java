@@ -121,6 +121,10 @@ public class ParticipantAccessor {
     if (null == participant || null == participant.getName() || participant.getName().isBlank()) {
       throw new IllegalArgumentException("cannot save null or blank participant");
     }
+    else if (!participant.getName().matches("[A-Za-z\\- ]+"))
+    {
+      throw new IllegalArgumentException("cannot save participants with characters except \"-\", spaces and letters");
+    }
 
     Participant existingParticipant = getParticipantByName(participant.getName());
     LOGGER.debug(participant);

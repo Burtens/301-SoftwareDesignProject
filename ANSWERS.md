@@ -18,31 +18,31 @@ AddingParticipantFeature
 
 #### What pattern is it?
 
-Singleton
+Factory Method
 
 #### What is its goal in the code?
+The Factory method's use in this code is to define an interface for an object but only let the subclasses decide what
+class to instantiate. 
+By using the factory method we encapsulate the knowledge of what subclass to create and move it away from the 
+framework of the application. Due to this not only do we decrease coupling as we don't have to create new objects directly (Principle: Program to an Interface), 
+but we also hide away the true implementation of the concrete methods and products (Principle: hide your decisions). 
 
-This design pattern is implemented to ensure that only one instance of the DateUtil class is created.
-The singleton pattern also provides a single access point to the class that is generated when the getInstance method is 
-first called. This is useful as it provides control over how and when clients access it.
-
-In the case of this application DateUtils is built this way to ensure that all the dates used are consistent with each other
-with a set default format. This also means that the default date java library doesn't have to be imported into every class that 
-needs it, instead we can get the current instance of the DateUtils class. This also improved the name space lowering the amount of 
-imports and variables that each class needs.
-
+In contrast, everytime you would need to create a new LocationServiceResult you would need to connect the classes related 
+to getting that object directly into your code, Even if they are only needed for that one section. This greatly increases
+coupling and even violates the dependency inversion principle.
 #### Name of UML Class diagram attached:
 
-Singleton Class Diagram.png
+Factory Method UML.png
 
 #### Mapping to GoF pattern elements:
 
 | GoF element | Code element |
 | ----------- | ------------ |
-| Singleton   | DateUtil     |
-| uniqueInstance| instance   |
-| instance() | getInstance() |
-| Singleton()| DateUtil()    |
+| AbstractCreator | LocationService       |
+| ConcreteCreator | NominatimQuery        |
+| AbstractProduct | LocationServiceResult |
+| ConcreteProduct | NominatimResult       |
+| FactoryMethod   | getCityFromString()   |
 ### Pattern 2
 
 #### What pattern is it?
@@ -55,7 +55,7 @@ This design pattern is implemented into the code to allow events to have multipl
 and allow the events state to change based on a users decisions. 
 
 By using a State patten this allows the different events i.e. Scheduled, Archived, Past and Canceled to have different 
-behavior defined separately in their own sub-classes with transitions defined as explicit methods. 
+behavior defined separately in their own sub-classes with transitions defined as explicit methods (Principle: Tell, don't ask, Program to an Interface). 
 This makes it easier to the follow transition path and can make the codes intent clearer.
 
 In contrast, the context implementation would have to use data values to define internal states. 
@@ -65,7 +65,7 @@ the code is doing and mean that if a new state is added all that code would have
 
 #### Name of UML Class diagram attached:
 
-**YOUR ANSWER**
+State Design UML.png
 
 #### Mapping to GoF pattern elements:
 
@@ -78,26 +78,32 @@ the code is doing and mean that if a new state is added all that code would have
 | ConcreteStateB | CanceledEvent |
 | ConcreteStateC | ArchivedEvent |
 | ConcreteStateD | PastEvent |
-| handle() | happen() |
-| handle() | cancel() |
-| handle() | reschedule() |
 | handle() | archive() |
+| handle() | happen() |
+| handle() | reschedule() |
+| handle() | cancel() |
 
 ## Task 3 - Full UML Class diagram
 
 ### Name of file of full UML Class diagram attached
 
-**YOUR ANSWER**
+Full UML.png
 
 ## Task 4 - Implement new feature
 
 ### What pattern fulfils the need for the feature?
 
-**YOUR ANSWER**
+Observer
 
 ### What is its goal and why is it needed here?
 
-**YOUR ANSWER**
+In the case of this AC users need to be notified when the events they are attending change status. The idea of an eventObserver
+pattern allows us to do this without forcing events to directly know about the participants that are attending the event.
+This ensures that events and participants are kept in sync whilst ensuring that we are still separating concerns and avoiding 
+tight coupling. 
+
+We can use the eventObserver pattern to notify participants of events when they change. This is exactly what we need to implement U4.
+
 
 ### Name of UML Class diagram attached:
 
@@ -105,9 +111,18 @@ the code is doing and mean that if a new state is added all that code would have
 
 ### Mapping to GoF pattern elements:
 
-| GoF element | Code element |
-| ----------- | ------------ |
-|             |              |
+| GoF element      | Code element |
+| -----------      | ------------ |
+| Subject          | Event                |
+| ConcreteSubjectA | ArchivedEvent        |
+| ConcreteSubjectB | CanceledEvent        |
+| ConcreteSubjectC | PastEvent            |
+| ConcreteSubjectD | ScheduledEvent       |
+| Observer         | EventObserver        |
+| ConcreteObserver | Participant          |
+| notify()         | notifyParticipants() |
+| update()         | update()             |
+
 
 ## Task 5 - BONUS - Acceptance tests for Task 4
 

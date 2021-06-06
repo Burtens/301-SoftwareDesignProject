@@ -38,7 +38,7 @@ public class EventHandlerImpl implements EventHandler {
 
     for (Participant participant : participants) {
       if (null == participant) {
-        throw new IllegalArgumentException("one of the participant is null");
+        throw new IllegalArgumentException("one of the participants is null");
       }
       if (event.getParticipants().stream().noneMatch(p -> p.getName().equals(participant.getName()))) {
         LOGGER.debug("added {}: {}", participant, event.addParticipant(participant));

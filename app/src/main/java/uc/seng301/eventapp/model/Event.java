@@ -27,10 +27,7 @@
 
 package uc.seng301.eventapp.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -259,6 +256,7 @@ public abstract class Event {
     if (getParticipants().isEmpty()) {
       participants = new ArrayList<>();
     }
+
     return getParticipants().add(participant);
   }
 
@@ -295,8 +293,12 @@ public abstract class Event {
    *
    * @param participants a (possibly null) list of participants
    */
-  public void setParticipants(List<Participant> participants) {
-    this.participants = participants;
+  public void setParticipants(List<Participant> participants) { this.participants = participants; }
+
+  protected void notifyParticipants() {
+    for (EventObserver eventObserver : this.participants) {
+      eventObserver.Update(getEventId());
+    }
   }
 
   @Override
