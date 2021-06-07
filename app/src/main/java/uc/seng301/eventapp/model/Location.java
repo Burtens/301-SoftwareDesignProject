@@ -186,7 +186,6 @@ public class Location {
       ", name='" + getName() + "'" +
       ", latitude='" + getLatitude() + "'" +
       ", longitude='" + getLongitude() + "'" +
-      ", event='" + getEvent() + "'" +
       "}";
       // @formatter:on
   }
