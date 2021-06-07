@@ -237,12 +237,9 @@ public class EventAccessor {
       transaction.commit();
       LOGGER.info("Updated status of event with name '{}'", event.getName());
     } catch (HibernateException e) {
-      LOGGER.error("unable to persist event '{}' with participants", event.getName(), e);
+      LOGGER.error("unable to change event '{}' status", event.getName(), e);
     }
   }
-
-
-
 
   /**
    * Save given event and attached participants to the database. Unresolved

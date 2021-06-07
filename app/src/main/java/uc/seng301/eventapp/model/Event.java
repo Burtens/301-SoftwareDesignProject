@@ -256,7 +256,6 @@ public abstract class Event {
     if (getParticipants().isEmpty()) {
       participants = new ArrayList<>();
     }
-
     return getParticipants().add(participant);
   }
 

@@ -157,9 +157,6 @@ public class Participant implements EventObserver {
         cli.nextLine();
         getEvents().remove(updatedEvent);
       } else {
-
-
-
         System.out.println("\tWould you like to leave this event due to the status change?\n" +
                 "\ttype 'yes' to leave, anything else to ignore.");
         if ("yes".equals(cli.nextLine())) {
