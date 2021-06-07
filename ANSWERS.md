@@ -32,7 +32,7 @@ to getting that object directly into your code, Even if they are only needed for
 coupling and even violates the dependency inversion principle.
 #### Name of UML Class diagram attached:
 
-Factory Method UML.png
+Factory Method Pattern UML.png
 
 #### Mapping to GoF pattern elements:
 
@@ -65,7 +65,7 @@ the code is doing and mean that if a new state is added all that code would have
 
 #### Name of UML Class diagram attached:
 
-State Design UML.png
+State Pattern UML.png
 
 #### Mapping to GoF pattern elements:
 
@@ -107,7 +107,7 @@ We can use the eventObserver pattern to notify participants of events when they 
 
 ### Name of UML Class diagram attached:
 
-**YOUR ANSWER**
+Observer Pattern UML.png
 
 ### Mapping to GoF pattern elements:
 
@@ -121,7 +121,9 @@ We can use the eventObserver pattern to notify participants of events when they 
 | Observer         | EventObserver        |
 | ConcreteObserver | Participant          |
 | notify()         | notifyParticipants() |
-| update()         | update()             |
+| attach()         | addParticipant()     |
+| detach()         | removeParticipant()  |
+| update()         | updateAttendance()   |
 
 
 ## Task 5 - BONUS - Acceptance tests for Task 4

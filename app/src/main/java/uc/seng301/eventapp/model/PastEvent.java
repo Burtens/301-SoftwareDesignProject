@@ -27,6 +27,7 @@
 
 package uc.seng301.eventapp.model;
 
+import java.util.Collections;
 import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
@@ -77,13 +78,17 @@ public class PastEvent extends Event {
   @Override
   public Event reschedule(Date date) {
     setDate(date);
-    notifyParticipants();
+    notifyParticipants(EventStatus.SCHEDULED);
     return new ScheduledEvent(this);
   }
 
   @Override
   public Event archive() {
-    notifyParticipants();
+    notifyParticipants(EventStatus.ARCHIVED);
+
+    // Remove all participants
+    setParticipants(Collections.emptyList());
+
     return new ArchivedEvent(this);
   }
 

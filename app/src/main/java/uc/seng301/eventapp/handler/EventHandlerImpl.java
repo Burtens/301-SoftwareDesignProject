@@ -1,5 +1,6 @@
 package uc.seng301.eventapp.handler;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -105,6 +106,38 @@ public class EventHandlerImpl implements EventHandler {
       }
     }
   }
+
+  @Override
+  public void refreshParticipants(Event event) {
+    //Gets a list of the events current Participants
+    List<Participant> removedParticipants = new ArrayList<>();
+
+    // Goes through list of participants to check if they are still attending
+    for (Participant participant : event.getParticipants()) {
+
+      boolean found = false;
+      // Checks through the participants events to see if event has been removed
+      for (Event participantsEvent : participant.getEvents()) {
+        if (participantsEvent.getName().equals(event.getName())) {
+          found = true;
+          break;
+        }
+      }
+
+      if (!found) {
+        removedParticipants.add(participant);
+      }
+    }
+
+    // Removes all participants that arent attending the event anymore.
+    for (Participant removedParticipant : removedParticipants) {
+      event.removeParticipant(removedParticipant);
+    }
+
+
+
+  }
+
 
   @Override
   public Event updateEventStatus(Event event, EventStatus newStatus, Date date) throws IllegalStateException {

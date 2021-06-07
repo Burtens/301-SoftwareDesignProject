@@ -217,6 +217,33 @@ public class EventAccessor {
     return event.getEventId();
   }
 
+
+  /**
+   * Called when updating an events status, used as JPA's dont persist an event status change. Attempts to update new
+   * event before updating status.
+   * @param event The event who's status is being updated.
+   * @param status The status the event is being converted to.
+   */
+  public void updateEventStatus(Event event, EventStatus status) {
+    // Store event into database with updated data
+    persistEventAndParticipants(event);
+
+    // Update the status of the newly added event.
+    try (Session session = sessionFactory.openSession()) {
+      Transaction transaction = session.beginTransaction();
+      session.createNativeQuery(
+              "update event set event_status = '" + status + "' where id_event = " +
+                      event.getEventId()).executeUpdate();
+      transaction.commit();
+      LOGGER.info("Updated status of event with name '{}'", event.getName());
+    } catch (HibernateException e) {
+      LOGGER.error("unable to persist event '{}' with participants", event.getName(), e);
+    }
+  }
+
+
+
+
   /**
    * Save given event and attached participants to the database. Unresolved
    * participants will be persisted too. No validity checks are performed on

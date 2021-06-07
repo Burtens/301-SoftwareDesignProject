@@ -76,6 +76,12 @@ public interface EventHandler {
    */
   void refreshEvents();
 
+
+  /**
+   * Looks at a given event and refreshes the participants based on there attendance status of that event.
+   */
+  void refreshParticipants(Event event);
+
   /**
    * Update the status of given event to a new status
    * 

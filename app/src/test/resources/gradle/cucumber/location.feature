@@ -28,12 +28,12 @@
 Feature: U2 - Add location to events from external API
 
   Scenario: AC1 - Add location to existing event consisting of a simple string
-    Given There is an event with name "SENG301 Asg 3", description "Let's learn some patterns", type "assignment" and date "07/06/2021"
+    Given There is an event with name "SENG301 Asg 3", description "Let's learn some patterns", type "assignment" and date "07/10/2021"
     When I add a location with name "Christchurch"
     Then The event has a location that is persisted when saving the event
 
   Scenario: AC2 - Retrieve location description and coordinates from external API
-    Given There is an event with name "SENG301 Asg 3", description "Let's learn some patterns", type "assignment" and date "07/06/2021"
+    Given There is an event with name "SENG301 Asg 3", description "Let's learn some patterns", type "assignment" and date "07/10/2021"
     When I add a location with name "Christchurch"
     And I retrieve the full description and geolocalisation coordinates for location "Christchurch" from an external API
     Then The retrieved description, latitude and longitude are added to the location

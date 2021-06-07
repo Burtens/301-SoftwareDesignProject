@@ -28,17 +28,17 @@
 Feature: U3 - Add participant to event
 
   Scenario: AC1 - Add existing participants to an event (Participant name is non-empty)
-    Given There is an existing participant with the name "John Smith" and an existing event with name "AT Workshop" and date "07/06/2021"
+    Given There is an existing participant with the name "John Smith" and an existing event with name "AT Workshop" and date "07/10/2021"
     When I add that participant to the event
     Then I expect that event to contain the participant in its attending participants
 
   Scenario: AC2 - Adding participants that dont exist to an event, creates a participant with a given non-empty name.
-    Given There is an existing event with name "SENG301 Assignment Help" and date "08/06/2021"
+    Given There is an existing event with name "SENG301 Assignment Help" and date "08/10/2021"
     When I add a non-existent participant with name "John Smith" to that event
     Then A new participant should be generated with the given name and added to that event
 
   Scenario: AC3 - Empty Participants or participants with names containing invalid characters cannot be added to events
-    Given There is an existing event with name "SENG301 Assignment Help" and date "08/06/2021"
+    Given There is an existing event with name "SENG301 Assignment Help" and date "08/10/2021"
     When I attempt to add an empty participant or participants with names "12345", " ", "", "Sa2m9S" and "+=@$"
     Then I should get an exception when I try the empty participant,
     And the participant with a null name,

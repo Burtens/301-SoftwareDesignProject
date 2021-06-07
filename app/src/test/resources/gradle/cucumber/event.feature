@@ -29,20 +29,20 @@ Feature: U1 - Create a new event
 
   Scenario: AC1 - Create an event with a name, description, type and a date and no cost
     Given There is no event with name "SENG301 Asg 3"
-    When I add an event with name "SENG301 Asg 3", description "Let's learn some patterns", type "assignment" and date "07/06/2021"
+    When I add an event with name "SENG301 Asg 3", description "Let's learn some patterns", type "assignment" and date "07/10/2021"
     Then The event is created with the correct name, description, type and date
 
   Scenario: AC2 - Create an event with a name, description, type, a date and a cost
     Given There is no event with name "SENG301 Asg 3 (bis)"
-    When I add an event with name "SENG301 Asg 3 (bis)", description "Let's learn some more patterns", type "assignment" date "07/06/2021" and cost 0.0
+    When I add an event with name "SENG301 Asg 3 (bis)", description "Let's learn some more patterns", type "assignment" date "07/10/2021" and cost 0.0
     Then The event is created with the correct name, description, date, type and cost
 
   Scenario: AC3 - Two events cannot have the same name
-    Given There is an event with name "SENG301 Asg 3" and date "07/06/2021"
-    When I create a duplicate event with name "SENG301 Asg 3" and date "07/06/2021"
+    Given There is an event with name "SENG301 Asg 3" and date "07/10/2021"
+    When I create a duplicate event with name "SENG301 Asg 3" and date "07/10/2021"
     Then I expect an exception that disallow me to save it
 
   Scenario: AC 4 - The event date must be in the future, but no later than a year
     Given There is no events with name "Event in the past" and "Event to far in the future"
-    When I want to set the first event date to "07/06/2022" and the second to "01/01/2000"
+    When I want to set the first event date to "07/12/2022" and the second to "01/01/2000"
     Then I expect an exception that disallow me to create any of those

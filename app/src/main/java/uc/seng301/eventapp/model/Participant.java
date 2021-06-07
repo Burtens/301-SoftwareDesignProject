@@ -29,6 +29,7 @@ package uc.seng301.eventapp.model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -131,12 +132,42 @@ public class Participant implements EventObserver {
   }
 
 
-
   @Override
-  public void Update(Long eventId) {
+  public void updateAttendance(String eventName, EventStatus newStatus) {
+    Event updatedEvent = null;
 
-    // TODO do something when event is notified
+    for (Event event : getEvents()) {
+      if (event.getName().equals(eventName)) {
+        updatedEvent = event;
+        break;
+      }
+    }
 
+    // Notify User
+    // "Sending" a message to the participant
+    if (updatedEvent != null) {
+      Scanner cli = new Scanner(System.in);
+      System.out.println("\nHi " + getName() + ", an event your attending is changing status!\n" +
+              "\tThe events name is: " + eventName + "\n" +
+              "\tThe status it is changing to is: " + newStatus + "\n");
+      if (newStatus == EventStatus.ARCHIVED) {
+        // Removes the event from the participants event list
+        System.out.println("Since the event has been archived your attendance has been removed.\n" +
+                "\tPress Enter to continue.");
+        cli.nextLine();
+        getEvents().remove(updatedEvent);
+      } else {
+
+
+
+        System.out.println("\tWould you like to leave this event due to the status change?\n" +
+                "\ttype 'yes' to leave, anything else to ignore.");
+        if ("yes".equals(cli.nextLine())) {
+          getEvents().remove(updatedEvent);
+          System.out.println("\nYou were removed from the event.");
+        }
+      }
+    }
   }
 
   @Override

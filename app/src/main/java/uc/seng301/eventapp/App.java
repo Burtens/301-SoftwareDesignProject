@@ -28,9 +28,11 @@
 package uc.seng301.eventapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
@@ -51,6 +53,7 @@ import uc.seng301.eventapp.location.LocationService;
 import uc.seng301.eventapp.location.LocationServiceResult;
 import uc.seng301.eventapp.location.NominatimQuery;
 import uc.seng301.eventapp.model.Event;
+import uc.seng301.eventapp.model.EventStatus;
 import uc.seng301.eventapp.model.Location;
 import uc.seng301.eventapp.model.Participant;
 import uc.seng301.eventapp.util.DateUtil;
@@ -273,15 +276,88 @@ public class App {
   }
 
   private void updateEventStatusMenu() {
-    System.out.println("What is the id of the event you want to change status of?");
+    System.out.println("\nWhat is the id of the event you want to change status of?");
     String eventId = cli.nextLine();
 
     if (eventId.chars().allMatch(Character::isDigit)) {
       Event event = eventAccessor.getEventAndParticipantsById(Long.parseLong(eventId));
 
       if (null != event) {
-        String currentStatus = event.toString();
-        System.out.println("The current status of the event is: " + currentStatus);
+        EventStatus currentStatus = EventStatus.valueOf(event.getClass().getAnnotation( DiscriminatorValue.class ).value());
+        System.out.println("\nThe current status of the event is: " + currentStatus);
+
+
+        if (currentStatus != EventStatus.ARCHIVED) {
+          System.out.println("What status would you like to change the event too?");
+        }
+
+        DateUtil dateUtil = DateUtil.getInstance();
+        int statusSelect;
+        Date date = dateUtil.getCurrentDate();
+
+        EventStatus chosenStatus = null;
+        switch (currentStatus) {
+          case PAST, CANCELED -> {
+            System.out.println("\t 1. Reschedule\n" +
+                               "\t 2. Archive\n" +
+                               "\t 0. Return to Main Menu");
+            String input = cli.nextLine();
+            try {
+              statusSelect = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+              statusSelect = -1;
+            }
+            switch (statusSelect) {
+              case 1 -> {
+                chosenStatus = EventStatus.SCHEDULED;
+
+                // Get date to reschedule event to
+                System.out.println("Enter a date to reschedule your event too in "
+                        + DateUtil.getInstance().getDefaultDateFormat().toUpperCase() + " format:");
+                date =  dateUtil.convertToDate(cli.nextLine());
+              }
+              case 2 -> chosenStatus = EventStatus.ARCHIVED;
+              case 0 -> {}
+              default -> System.out.println("Unknown value entered");
+            }
+          }
+          case SCHEDULED -> {
+            System.out.println("\t 1. Have Event\n" +
+                              "\t 2. Cancel\n" +
+                              "\t 0. Return to Main Menu");
+            String input = cli.nextLine();
+            try {
+              statusSelect = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+              statusSelect = -1;
+            }
+            switch (statusSelect) {
+              case 1 -> chosenStatus = EventStatus.PAST;
+              case 2 -> chosenStatus = EventStatus.CANCELED;
+              case 0 -> {}
+              default -> System.out.println("Unknown value entered");
+            }
+          }
+          case ARCHIVED -> System.out.println("This event is archived so status cannot be changed.");
+        }
+
+        // Update Status if status is selected
+        if (chosenStatus != null) {
+          try {
+
+            Event updatedEvent = eventHandler.updateEventStatus(event, chosenStatus, date);
+
+            // Updates the participants of the event by checking their attendance status.
+            eventHandler.refreshParticipants(updatedEvent);
+
+            //Attempts to Persist the edited event.
+            eventAccessor.updateEventStatus(updatedEvent, chosenStatus);
+
+          } catch (IllegalArgumentException e) {
+            System.out.println("Something is wrong with the values passed: " + e.getMessage());
+          }
+        }
+
       } else {
         System.out.println("Cannot find event with id: " + eventId);
       }

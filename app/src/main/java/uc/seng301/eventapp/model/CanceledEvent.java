@@ -27,6 +27,7 @@
 
 package uc.seng301.eventapp.model;
 
+import java.util.Collections;
 import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
@@ -79,13 +80,17 @@ public class CanceledEvent extends Event {
       throw new IllegalArgumentException("Date + '" + date + "' cannot be in the past.");
     }
     setDate(date);
-    notifyParticipants();
+    notifyParticipants(EventStatus.SCHEDULED);
     return new ScheduledEvent(this);
   }
 
   @Override
   public Event archive() {
-    notifyParticipants();
+    notifyParticipants(EventStatus.ARCHIVED);
+
+    // Remove all participants
+    setParticipants(Collections.emptyList());
+
     return new ArchivedEvent(this);
   }
 

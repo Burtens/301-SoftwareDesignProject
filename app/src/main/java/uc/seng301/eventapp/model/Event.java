@@ -261,6 +261,17 @@ public abstract class Event {
   }
 
   /**
+   * Remove given participant from list of participants in this event
+   *
+   * @param participant a (assumed is in list) participant
+   * @return true if the remove operation succeeded (from {@link Collections#remove})
+   */
+  public boolean removeParticipant(Participant participant) {
+    return getParticipants().remove(participant);
+  }
+
+
+  /**
    * Get the participants entities participating into this event
    *
    * @return a (possibly empty) list of participants
@@ -295,9 +306,13 @@ public abstract class Event {
    */
   public void setParticipants(List<Participant> participants) { this.participants = participants; }
 
-  protected void notifyParticipants() {
-    for (EventObserver eventObserver : this.participants) {
-      eventObserver.Update(getEventId());
+  /**
+   * Notifies all participants of this event.
+   * @param status The status that the event is changing too.
+   */
+  protected void notifyParticipants(EventStatus status) {
+    for (EventObserver eventObserver : getParticipants()) {
+     eventObserver.updateAttendance(getName(), status);
     }
   }
 
