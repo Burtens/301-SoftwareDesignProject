@@ -130,8 +130,8 @@ Observer Pattern UML.png
 
 ### Feature file (Cucumber Scenarios)
 
-**NAME OF FEATURE FILE**
+notification.feature
 
 ### Java class implementing the acceptance tests
 
-**NAME OF JAVA FILE**
+NotificationFeature
